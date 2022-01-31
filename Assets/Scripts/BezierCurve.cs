@@ -5,14 +5,22 @@ using System.Collections.Generic;
 public class BezierCurve : MonoBehaviour
 {
 	public Shader shader;
+	public LineRenderer LineRenderer;
 	public GameObject[] ControlPoints;
 	public GameObject[] AxisObjects;
 	public bool IsSelected = false;
 
-	private BezierPath path = new BezierPath();
-	private int canvasIndex = 0;
+	private BezierPath path;
 
-	private void UpdatePath()
+    private void Start()
+    {
+		path = new BezierPath(LineRenderer);
+	}
+
+    /// <summary>
+    /// 更新Path
+    /// </summary>
+    private void UpdatePath()
 	{
 		List<Vector3> c = new List<Vector3>();
 		for (int o = 0; o < ControlPoints.Length; o++)
@@ -23,38 +31,12 @@ public class BezierCurve : MonoBehaviour
 				c.Add(p);
 			}
 		}
-		path.DeletePath();
 		path.CreateCurve(c);
 	}
 
-	// Use this for initialization
-	void Start()
-	{
-		UpdatePath();
-	}
-
-	// Update is called once per frame 
 	void Update()
 	{
-		/*UpdatePath();
-		for (int i = 1; i < (path.pointCount); i++)
-		{
-			Vector3 startv = path.pathPoints[i - 1];
-			Vector3 endv = path.pathPoints[i];
-			CreateLine(startv, endv, 0.25f, Color.blue);
-		}*/
-	}
-
-	void OnDrawGizmosSelected()
-	{
 		UpdatePath();
-		for (int i = 1; i < (path.pointCount); i++)
-		{
-			Vector3 startv = path.pathPoints[i - 1];
-			Vector3 endv = path.pathPoints[i];
-			Gizmos.color = Color.blue;
-			Gizmos.DrawLine(startv, endv);
-		}
 	}
 
 	/// <summary>
@@ -81,6 +63,9 @@ public class BezierCurve : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 每當點擊curve方塊，就將它設為當前操作中的curve
+	/// </summary>
     private void OnMouseDown()
     {
 		RoadEditManager.Instance.SetCurrentBezier(this);
