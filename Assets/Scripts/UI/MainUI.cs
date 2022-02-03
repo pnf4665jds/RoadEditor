@@ -22,6 +22,6 @@ public class MainUI : MonoBehaviour
         Vector3 spawnPos = Camera.main.ScreenToWorldPoint(
             new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane + 10));
         BezierCurve curve = Instantiate(BezierPrefab, spawnPos, Quaternion.identity).GetComponentInChildren<BezierCurve>();
-        RoadEditManager.Instance.SetCurrentBezier(curve);
+        //RoadEditManager.Instance.SetCurrentBezier(curve);
     }
 }
