@@ -68,6 +68,6 @@ public class BezierCurve : MonoBehaviour
 	/// </summary>
     private void OnMouseDown()
     {
-		//RoadEditManager.Instance.SetCurrentBezier(this);
+		RoadEditManager.Instance.SetCurrentBezier(this);
     }
 }
