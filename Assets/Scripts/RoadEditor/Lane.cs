@@ -32,4 +32,9 @@ public class Lane : MonoBehaviour
 		roadRenderer.roadWidth = laneWidth.a;
 		roadRenderer.UpdateRoad(points, rightLane, widthOffset);
     }
+
+	public void SetVisibility(bool visible)
+	{
+		roadRenderer.SetVisibility(visible);
+	}
 }

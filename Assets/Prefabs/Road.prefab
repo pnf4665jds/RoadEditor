@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lanePrefab: {fileID: 1450685308495898432, guid: a8403f63a7ec65044b465a73c94c6925, type: 3}
-  leftLaneParent: {fileID: 6447099440327833957}
+  laneParent: {fileID: 6447099440327833957}
   referenceLineWrapper: {fileID: 3225447720074688867}
 --- !u!33 &7642979265722387454
 MeshFilter:
@@ -412,7 +412,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4106560827411704676}
   m_Layer: 0
-  m_Name: LeftLanes
+  m_Name: Lanes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
