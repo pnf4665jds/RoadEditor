@@ -5,9 +5,8 @@ using UnityEngine;
 public class SceneManager : MonoSingleton<SceneManager>
 {
     /// <summary>
-    /// 管理場景中的所有road跟node
+    /// 管理場景中的所有road
     /// </summary>
 
-    public HashSet<SceneRoad> sceneRoads = new HashSet<SceneRoad>();
-    public HashSet<RoadNode> roadNodes = new HashSet<RoadNode>();
+    public HashSet<Road> sceneRoads = new HashSet<Road>();
 }

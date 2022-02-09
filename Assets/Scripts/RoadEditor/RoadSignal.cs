@@ -5,5 +5,5 @@ using UnityEngine;
 public class RoadSignal : MonoBehaviour
 {
     // 這個Signal屬於哪個Road
-    public SceneRoad parentRoad;
+    public Road parentRoad;
 }

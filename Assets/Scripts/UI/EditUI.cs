@@ -13,7 +13,6 @@ public class EditUI : MonoBehaviour
     private void Awake()
     {
         CreateRoadButton.onClick.AddListener(() => CreateRoad());
-        LinkNodeButton.onClick.AddListener(() => EditManager.Instance.StartLinkNode());
     }
 
     /// <summary>
@@ -23,6 +22,6 @@ public class EditUI : MonoBehaviour
     {
         Vector3 spawnPos = Camera.main.ScreenToWorldPoint(
             new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane + 10));
-        SceneRoad road = Instantiate(RoadPrefab, spawnPos, Quaternion.identity).GetComponentInChildren<SceneRoad>();
+        Road road = Instantiate(RoadPrefab, spawnPos, Quaternion.identity).GetComponentInChildren<Road>();
     }
 }

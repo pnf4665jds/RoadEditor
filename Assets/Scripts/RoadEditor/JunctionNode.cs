@@ -16,8 +16,8 @@ public class JunctionNode : MonoBehaviour
 /// </summary>
 public class Connection
 {
-    public SceneRoad incomingRoad;
-    public SceneRoad connectingRoads;
-    public RoadLane fromLane;
-    public RoadLane toLane;
+    public Road incomingRoad;
+    public Road connectingRoads;
+    public Lane fromLane;
+    public Lane toLane;
 }
