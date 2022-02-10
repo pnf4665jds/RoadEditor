@@ -9,4 +9,6 @@ public class SceneManager : MonoSingleton<SceneManager>
     /// </summary>
 
     public HashSet<Road> sceneRoads = new HashSet<Road>();
+
+    public HashSet<INode> sceneNodes = new HashSet<INode>();
 }

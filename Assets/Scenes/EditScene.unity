@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clickObject: {fileID: 0}
   editRoadUI: {fileID: 1167423665}
+  isPreviewMode: 0
 --- !u!4 &230817043
 Transform:
   m_ObjectHideFlags: 0
@@ -1197,7 +1198,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1055845785
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class RoadRenderer : MonoBehaviour
 {
+    /// <summary>
+    /// 獨立出一個component來畫出整個road
+    /// </summary>
+
     [Range(.05f, 1.5f)]
     public float spacing = 0.3f;
     public float roadWidth = 1;
@@ -21,13 +25,14 @@ public class RoadRenderer : MonoBehaviour
         _renderer = GetComponent<MeshRenderer>();
     }
 
-    public void UpdateRoad(Vector3[] points, bool rightLane, float widthOffset)
+    // 更新路面mesh
+    public void UpdateRoad(ReferenceLineWrapper wrapper, List<Lane> leftLanes, List<Lane> rightLanes)
     {
         if (!_renderer.enabled)
             return;
 
-        _filter.mesh = CreateRoadMesh(points, rightLane, widthOffset);
-        int textureRepeat = Mathf.RoundToInt(tiling * points.Length * spacing * .05f);
+        _filter.mesh = CreateRoadMesh(wrapper, leftLanes, rightLanes);
+        int textureRepeat = Mathf.RoundToInt(tiling * wrapper.GetPointCount() * spacing * .05f);
         _renderer.sharedMaterial.mainTextureScale = new Vector2(1, textureRepeat);
     }
 
@@ -36,17 +41,23 @@ public class RoadRenderer : MonoBehaviour
         _renderer.enabled = visible;
     }
 
-    private Mesh CreateRoadMesh(Vector3[] points, bool right, float widthOffset)
+    private Mesh CreateRoadMesh(ReferenceLineWrapper wrapper, List<Lane> leftLanes, List<Lane> rightLanes)
     {
-        Vector3[] verts = new Vector3[points.Length * 2];
+        int totalLaneCount = leftLanes.Count + rightLanes.Count;
+        Vector3[] verts = new Vector3[wrapper.GetPointCount() * 2 * totalLaneCount];
         Vector2[] uvs = new Vector2[verts.Length];
-        int numTris = 2 * (points.Length - 1);
+        int numTris = 2 * (wrapper.GetPointCount() - 1) * totalLaneCount;
         int[] tris = new int[numTris * 3];
         int vertIndex = 0;
         int triIndex = 0;
 
-        if (!right)
+        Vector3[] points = new Vector3[wrapper.GetPointCount()];
+        for(int i = 0; i < points.Length; i++)
         {
+            points[i] = wrapper.GetReferenceLinePos((1.0f / (points.Length - 1)) * i);
+        }
+
+        for(int j = 0; j < leftLanes.Count; j++){
             for (int i = 0; i < points.Length; i++)
             {
                 Vector3 forward = Vector3.zero;
@@ -62,9 +73,18 @@ public class RoadRenderer : MonoBehaviour
                 forward.Normalize();
                 Vector3 left = Vector3.Cross(Vector3.down, forward);
 
-                verts[vertIndex] = points[i] + left * (roadWidth + widthOffset);
-                verts[vertIndex + 1] = points[i] + left * widthOffset;
+                int preIndex = vertIndex - wrapper.GetPointCount() * 2;
 
+                if (j == 0)
+                {
+                    verts[vertIndex] = points[i] + left;
+                    verts[vertIndex + 1] = points[i];
+                }
+                else
+                {
+                    verts[vertIndex] = verts[preIndex] + left;
+                    verts[vertIndex + 1] = verts[preIndex];
+                }
                 float completionPercent = i / (float)(points.Length - 1);
                 float v = 1 - Mathf.Abs(2 * completionPercent - 1);
                 uvs[vertIndex] = new Vector2(0, v);
@@ -79,13 +99,13 @@ public class RoadRenderer : MonoBehaviour
                     tris[triIndex + 3] = vertIndex + 1;
                     tris[triIndex + 4] = (vertIndex + 2) % verts.Length;
                     tris[triIndex + 5] = (vertIndex + 3) % verts.Length;
+                    triIndex += 6;
                 }
-
                 vertIndex += 2;
-                triIndex += 6;
             }
         }
-        else
+
+        for (int j = leftLanes.Count; j < totalLaneCount; j++)
         {
             for (int i = points.Length - 1; i >= 0; i--)
             {
@@ -102,8 +122,18 @@ public class RoadRenderer : MonoBehaviour
                 forward.Normalize();
                 Vector3 left = Vector3.Cross(Vector3.down, forward);
 
-                verts[vertIndex] = points[i] + left * (roadWidth + widthOffset);
-                verts[vertIndex + 1] = points[i] + left * widthOffset;
+                int preIndex = vertIndex - wrapper.GetPointCount() * 2;
+
+                if (j == leftLanes.Count)
+                {
+                    verts[vertIndex] = points[i] + left;
+                    verts[vertIndex + 1] = points[i];
+                }
+                else
+                {
+                    verts[vertIndex] = verts[preIndex] + left;
+                    verts[vertIndex + 1] = verts[preIndex];
+                }
 
                 float completionPercent = (points.Length - 1 - i) / (float)(points.Length - 1);
                 float v = 1 - Mathf.Abs(2 * completionPercent - 1);
@@ -119,10 +149,10 @@ public class RoadRenderer : MonoBehaviour
                     tris[triIndex + 3] = vertIndex + 1;
                     tris[triIndex + 4] = (vertIndex + 2) % verts.Length;
                     tris[triIndex + 5] = (vertIndex + 3) % verts.Length;
-                }
 
+                    triIndex += 6;
+                }
                 vertIndex += 2;
-                triIndex += 6;
             }
         }
 

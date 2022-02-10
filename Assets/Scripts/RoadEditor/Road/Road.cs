@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Road : MonoBehaviour
+public class Road : MonoBehaviour, INode
 {
     // 參考: https://blog.csdn.net/qq_36622009/article/details/107006508#OpenDrive_52
     // 參考: https://hackmd.io/@yashashin/By78mxp0F#Roads
@@ -29,36 +29,37 @@ public class Road : MonoBehaviour
     // 參考線wrapper
     public ReferenceLineWrapper referenceLineWrapper;
 
+    // 繪製Road的Component
+    public RoadRenderer roadRenderer;
+
     // 如果不屬於Junction則為null reference
     public JunctionNode parentJunction { get; set; }
+
+    private MeshRenderer _nodeRenderer { get; set; }
 
     private void Awake()
     {
         SceneManager.Instance.sceneRoads.Add(this);
+        SceneManager.Instance.sceneNodes.Add(this);
         leftLanes = new List<Lane>();
         rightLanes = new List<Lane>();
+
+        _nodeRenderer = GetComponent<MeshRenderer>();
     }
 
     private void Update()
     {
-        float offsetLeft = 0, offsetRight = 0;
-        foreach(Lane lane in leftLanes)
-        {
-            lane.DrawLane(referenceLineWrapper, false, offsetLeft);
-            offsetLeft += lane.laneWidth.a;
-        }
-
-        foreach (Lane lane in rightLanes)
-        {
-            lane.DrawLane(referenceLineWrapper, true, offsetRight);
-            offsetRight += lane.laneWidth.a;
-        }
+        roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
     public void AddLeftLane()
     {
         GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
-        leftLanes.Add(laneObject.GetComponent<Lane>());
+        Lane lane = laneObject.GetComponent<Lane>();
+        leftLanes.Add(lane);
+        lane.OnNodeInit();
+        laneObject.transform.localPosition = laneParent.transform.right * 1.0f * leftLanes.Count;
+        laneObject.name = "LeftLane" + leftLanes.Count;
     }
 
     public void RemoveLeftLane()
@@ -68,13 +69,18 @@ public class Road : MonoBehaviour
         int removeIndex = leftLanes.Count - 1;
         Lane lane = leftLanes[removeIndex];
         leftLanes.RemoveAt(removeIndex);
+        SceneManager.Instance.sceneNodes.Remove(lane);
         Destroy(lane.gameObject);
     }
 
     public void AddRightLane()
     {
         GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
-        rightLanes.Add(laneObject.GetComponent<Lane>());
+        Lane lane = laneObject.GetComponent<Lane>();
+        rightLanes.Add(lane);
+        lane.OnNodeInit();
+        laneObject.transform.localPosition = -laneParent.transform.right * 1.0f * rightLanes.Count;
+        laneObject.name = "RightLane" + rightLanes.Count;
     }
 
     public void RemoveRightLane()
@@ -84,19 +90,37 @@ public class Road : MonoBehaviour
         int removeIndex = rightLanes.Count - 1;
         Lane lane = rightLanes[removeIndex];
         rightLanes.RemoveAt(removeIndex);
+        SceneManager.Instance.sceneNodes.Remove(lane);
         Destroy(lane.gameObject);
     }
 
-    public void SetVisibility(bool isVisible)
+    private void OnMouseEnter()
     {
-        foreach (Lane lane in leftLanes)
-        {
-            lane.SetVisibility(isVisible);
-        }
+        GetComponent<MeshRenderer>().material.color = Color.red;
+    }
 
-        foreach (Lane lane in rightLanes)
-        {
-            lane.SetVisibility(isVisible);
-        }
+    private void OnMouseExit()
+    {
+        GetComponent<MeshRenderer>().material.color = Color.white;
+    }
+
+    public void OnNodeInit()
+    {
+        if (EditManager.Instance.isPreviewMode)
+            OnPreviewMode();
+        else
+            OnEditMode();
+    }
+
+    public void OnPreviewMode()
+    {
+        roadRenderer.SetVisibility(true);
+        _nodeRenderer.enabled = false;
+    }
+
+    public void OnEditMode()
+    {
+        roadRenderer.SetVisibility(false);
+        _nodeRenderer.enabled = true;
     }
 }

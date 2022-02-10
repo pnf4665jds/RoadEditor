@@ -13,7 +13,7 @@ public class EditUI : MonoBehaviour
     private void Awake()
     {
         CreateRoadButton.onClick.AddListener(() => CreateRoad());
-        PreviewModeButton.onValueChanged.AddListener((isPreviewMode) => SetVisibility(isPreviewMode));
+        PreviewModeButton.onValueChanged.AddListener((isPreviewMode) => SetPreviewMode(isPreviewMode));
     }
 
     /// <summary>
@@ -24,13 +24,26 @@ public class EditUI : MonoBehaviour
         Vector3 spawnPos = Camera.main.ScreenToWorldPoint(
             new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane + 10));
         Road road = Instantiate(RoadPrefab, spawnPos, Quaternion.identity).GetComponentInChildren<Road>();
+        road.OnNodeInit();
     }
 
-    private void SetVisibility(bool isVisible)
+    private void SetPreviewMode(bool isPreviewMode)
     {
-        foreach(Road road in SceneManager.Instance.sceneRoads)
+        if (isPreviewMode)
         {
-            road.SetVisibility(isVisible);
+            EditManager.Instance.isPreviewMode = true;
+            foreach (INode node in SceneManager.Instance.sceneNodes)
+            {
+                node.OnPreviewMode();
+            }
+        }
+        else
+        {
+            EditManager.Instance.isPreviewMode = false;
+            foreach (INode node in SceneManager.Instance.sceneNodes)
+            {
+                node.OnEditMode();
+            }
         }
     }
 }

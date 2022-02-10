@@ -16,6 +16,11 @@ public class ReferenceLineWrapper : MonoBehaviour
 		lineRenderer.positionCount = 100;
 	}
 
+	public int GetPointCount()
+    {
+		return lineRenderer.positionCount;
+    }
+
     /// <summary>
     /// 根據給定的t值取得referenceline位置
     /// </summary>

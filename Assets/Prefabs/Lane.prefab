@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4784829357912911226}
   - component: {fileID: 5647155278194954889}
-  - component: {fileID: 4503748900474432959}
-  - component: {fileID: 1778347335383619991}
-  - component: {fileID: 9194843946337398440}
+  - component: {fileID: -2068338722613529404}
+  - component: {fileID: -2229909364008315868}
+  - component: {fileID: 1120444409715425199}
   m_Layer: 0
   m_Name: Lane
   m_TagString: Untagged
@@ -47,16 +47,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentRoad: {fileID: 0}
-  roadRenderer: {fileID: 9194843946337398440}
---- !u!33 &4503748900474432959
+--- !u!33 &-2068338722613529404
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450685308495898432}
-  m_Mesh: {fileID: 0}
---- !u!23 &1778347335383619991
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &-2229909364008315868
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,7 +74,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0649f8aedc444284788f1fc69ef9c6a3, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,19 +96,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &9194843946337398440
-MonoBehaviour:
+--- !u!135 &1120444409715425199
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450685308495898432}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02801c74df31e514db3666bba9bb7ef8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spacing: 0.3
-  roadWidth: 1
-  autoUpdate: 0
-  tiling: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}

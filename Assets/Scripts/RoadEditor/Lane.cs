@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lane : MonoBehaviour
+public class Lane : MonoBehaviour, INode
 {
 	public class Width
 	{
@@ -16,25 +16,43 @@ public class Lane : MonoBehaviour
 	// 這個Lane屬於哪個Road
 	public Road parentRoad;
 
-	public RoadRenderer roadRenderer;
-
 	public Width laneWidth;
 
-    private void Awake()
+	private MeshRenderer _nodeRenderer;
+
+
+	private void Awake()
     {
+		SceneManager.Instance.sceneNodes.Add(this);
 		laneWidth = new Width();
-    }
+		_nodeRenderer = GetComponent<MeshRenderer>();
+	}
 
-    public void DrawLane(ReferenceLineWrapper wrapper, bool rightLane, float widthOffset)
+    private void OnMouseEnter()
     {
-		Vector3[] points = new Vector3[100];
-		wrapper.lineRenderer.GetPositions(points);
-		roadRenderer.roadWidth = laneWidth.a;
-		roadRenderer.UpdateRoad(points, rightLane, widthOffset);
+		GetComponent<MeshRenderer>().material.color = Color.red;
     }
 
-	public void SetVisibility(bool visible)
+	private void OnMouseExit()
 	{
-		roadRenderer.SetVisibility(visible);
+		GetComponent<MeshRenderer>().material.color = Color.white;
+	}
+
+	public void OnNodeInit()
+	{
+		if (EditManager.Instance.isPreviewMode)
+			OnPreviewMode();
+		else
+			OnEditMode();
+	}
+
+	public void OnPreviewMode()
+	{
+		_nodeRenderer.enabled = false;
+	}
+
+	public void OnEditMode()
+	{
+		_nodeRenderer.enabled = true;
 	}
 }

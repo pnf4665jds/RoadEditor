@@ -7,6 +7,7 @@ public class EditManager : MonoSingleton<EditManager>
 {
     public GameObject clickObject;
     public GameObject editRoadUI;
+    public bool isPreviewMode = false;
 
     private GameObject _currentActiveUI;
 
