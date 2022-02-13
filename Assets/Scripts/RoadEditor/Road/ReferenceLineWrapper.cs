@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ReferenceLineWrapper : MonoBehaviour
 {
 	// 這個class用來處理ReferenceLine，主要需要提供一個function取得參考線的位置，便於產生車道，這邊暫時寫一個bezier curve的function當作參考線
-	public GameObject controlPoint1;
-	public GameObject controlPoint2;
-	public GameObject controlPoint3;
-	public GameObject controlPoint4;
+	public List<GameObject> controlPoints;
 	public LineRenderer lineRenderer;
 
     private void Start()
@@ -35,10 +33,10 @@ public class ReferenceLineWrapper : MonoBehaviour
 		float uuu = u * uu;
 
 		Vector3 B = new Vector3();
-		B = uuu * controlPoint1.transform.localPosition;
-		B += 3.0f * uu * t * controlPoint2.transform.localPosition;
-		B += 3.0f * u * tt * controlPoint3.transform.localPosition;
-		B += ttt * controlPoint4.transform.localPosition;
+		B = uuu * controlPoints[0].transform.localPosition;
+		B += 3.0f * uu * t * controlPoints[1].transform.localPosition;
+		B += 3.0f * u * tt * controlPoints[2].transform.localPosition;
+		B += ttt * controlPoints[3].transform.localPosition;
 
 		return B;
 	}
@@ -52,5 +50,15 @@ public class ReferenceLineWrapper : MonoBehaviour
 			point = GetReferenceLinePos(t);
 			lineRenderer.SetPosition(p, point);
 		}
+	}
+
+	public Vector3 GetStartControlPointPos()
+    {
+		return controlPoints[0].transform.position;
+    }
+
+	public Vector3 GetEndControlPointPos()
+	{
+		return controlPoints[controlPoints.Count - 1].transform.position;
 	}
 }

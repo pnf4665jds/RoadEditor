@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class Lane : MonoBehaviour, INode
 {
 	public class Width
@@ -18,24 +19,10 @@ public class Lane : MonoBehaviour, INode
 
 	public Width laneWidth;
 
-	private MeshRenderer _nodeRenderer;
-
-
 	private void Awake()
     {
 		SceneManager.Instance.sceneNodes.Add(this);
 		laneWidth = new Width();
-		_nodeRenderer = GetComponent<MeshRenderer>();
-	}
-
-    private void OnMouseEnter()
-    {
-		GetComponent<MeshRenderer>().material.color = Color.red;
-    }
-
-	private void OnMouseExit()
-	{
-		GetComponent<MeshRenderer>().material.color = Color.white;
 	}
 
 	public void OnNodeInit()
@@ -48,11 +35,11 @@ public class Lane : MonoBehaviour, INode
 
 	public void OnPreviewMode()
 	{
-		_nodeRenderer.enabled = false;
+
 	}
 
 	public void OnEditMode()
 	{
-		_nodeRenderer.enabled = true;
+
 	}
 }
