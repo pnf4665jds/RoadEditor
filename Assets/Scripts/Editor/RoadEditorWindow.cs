@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class RoadEditorWindow : EditorWindow
 {
-    public string[] options = new string[] { "Road1", "Road2" };
+    public string[] options = new string[] { "Road1", "Road2", "Road3" };
     private int index = 0;
 
     [MenuItem("Window/RoadEditor")]
