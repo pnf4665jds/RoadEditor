@@ -32,7 +32,7 @@ public class RoadRenderer : MonoBehaviour
         if (!_renderer.enabled)
             return;
 
-        _filter.mesh = CreateRoadMesh(wrapper, leftLanes, rightLanes);
+        _filter.sharedMesh = CreateRoadMesh(wrapper, leftLanes, rightLanes);
         int textureRepeat = Mathf.RoundToInt(tiling * wrapper.GetPointCount() * spacing * .05f);
         _renderer.sharedMaterial.mainTextureScale = new Vector2(1, textureRepeat);
     }

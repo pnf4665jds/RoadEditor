@@ -17,6 +17,7 @@ public class RoadEditorWindow : EditorWindow
         if (GUILayout.Button("Create road object"))
         {
             var roadObj = PrefabUtility.InstantiatePrefab(EditManager.Instance.roadPrefab);
+            Selection.activeObject = roadObj;
             Undo.RegisterCreatedObjectUndo(roadObj, "Create road");
         }
         if (GUILayout.Button("Add predecessor road"))
@@ -25,6 +26,7 @@ public class RoadEditorWindow : EditorWindow
             {
                 var roadObj = PrefabUtility.InstantiatePrefab(EditManager.Instance.roadPrefab);
                 EditManager.Instance.selectedRoad.SetPredecessorRoad(((GameObject)roadObj).GetComponent<Road>());
+                Selection.activeObject = roadObj;
                 Undo.RegisterCreatedObjectUndo(roadObj, "Create predecessor road");
             }
         }
@@ -34,6 +36,7 @@ public class RoadEditorWindow : EditorWindow
             {
                 var roadObj = PrefabUtility.InstantiatePrefab(EditManager.Instance.roadPrefab);
                 EditManager.Instance.selectedRoad.SetSuccessorRoad(((GameObject)roadObj).GetComponent<Road>());
+                Selection.activeObject = roadObj;
                 Undo.RegisterCreatedObjectUndo(roadObj, "Create successor road");
             }
         }

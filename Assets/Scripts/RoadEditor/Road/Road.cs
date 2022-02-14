@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -10,9 +11,6 @@ public class Road : MonoBehaviour, INode
     // 參考: https://hackmd.io/@yashashin/By78mxp0F#Roads
     // Road的reference line有方向性
 
-    public GameObject lanePrefab;
-    public GameObject laneParent;
-
     // 前一個相連的Road
     public Road predecessorRoad { get; set; }
 
@@ -20,7 +18,7 @@ public class Road : MonoBehaviour, INode
     public Road successorRoad { get; set; }
 
     // 參考線左側的車道
-    public List<Lane> leftLanes { get; set; }
+    public List<Lane> leftLanes;
 
     // 中間車道
     public Lane centerLane { get; set; }
@@ -37,22 +35,23 @@ public class Road : MonoBehaviour, INode
     // 是否繪製控制點
     public bool drawControlPoints = true;
 
-    public int pointerKnobIndex { get; set; } = 0;
-    public int selectedKnobIndex { get; set; } = 0;
+    // 是否繪製車道node
+    public bool drawLaneNode = true;
+
+    public int pointerKnobIndex = 0;
+    public int selectedKnobIndex = 0;
+    public int pointerLaneIndex = 0;
+    public int selectedLaneIndex = 0;
 
     // 如果不屬於Junction則為null reference
     public JunctionNode parentJunction { get; set; }
 
-    private MeshRenderer _nodeRenderer { get; set; }
-
-    private void Awake()
+    private void Start()
     {
         SceneManager.Instance.sceneRoads.Add(this);
         SceneManager.Instance.sceneNodes.Add(this);
         leftLanes = new List<Lane>();
         rightLanes = new List<Lane>();
-
-        _nodeRenderer = GetComponent<MeshRenderer>();
 
         // 初始化時左右側各新增一條車道
         AddLeftLane();
@@ -61,18 +60,16 @@ public class Road : MonoBehaviour, INode
 
     private void Update()
     {
-        roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
+        //roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
     public void AddLeftLane()
     {
-        GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
-        Lane lane = laneObject.GetComponent<Lane>();
+        Lane lane = new Lane();
         leftLanes.Add(lane);
         lane.OnNodeInit();
         lane.parentRoad = this;
-        laneObject.transform.localPosition = laneParent.transform.right * 1.0f * leftLanes.Count;
-        laneObject.name = "LeftLane" + leftLanes.Count;
+        roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
     public void RemoveLeftLane()
@@ -86,18 +83,16 @@ public class Road : MonoBehaviour, INode
         Lane lane = leftLanes[removeIndex];
         leftLanes.RemoveAt(removeIndex);
         SceneManager.Instance.sceneNodes.Remove(lane);
-        DestroyImmediate(lane.gameObject);
+        roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
     public void AddRightLane()
     {
-        GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
-        Lane lane = laneObject.GetComponent<Lane>();
+        Lane lane = new Lane();
         rightLanes.Add(lane);
         lane.OnNodeInit();
         lane.parentRoad = this;
-        laneObject.transform.localPosition = -laneParent.transform.right * 1.0f * rightLanes.Count;
-        laneObject.name = "RightLane" + rightLanes.Count;
+        roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
     public void RemoveRightLane()
@@ -111,7 +106,7 @@ public class Road : MonoBehaviour, INode
         Lane lane = rightLanes[removeIndex];
         rightLanes.RemoveAt(removeIndex);
         SceneManager.Instance.sceneNodes.Remove(lane);
-        DestroyImmediate(lane.gameObject);
+        roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
     public void SetPredecessorRoad(Road road)
@@ -176,6 +171,53 @@ public class Road : MonoBehaviour, INode
                     Gizmos.color = Color.gray;
                 }
                 else if (i == selectedKnobIndex)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawSphere(p, 0.2f);
+                    Gizmos.color = Color.gray;
+                }
+                else
+                {
+                    Gizmos.DrawSphere(p, 0.2f);
+                }
+            }
+        }
+
+        if (drawLaneNode)
+        {
+            Gizmos.color = Color.gray;
+            for(int i = 0; i < leftLanes.Count; i++)
+            {
+                Vector3 p = transform.position + (-transform.right) * (i + 1) * leftLanes[i].laneWidth.a / 2;
+                if ((i + 1) == pointerLaneIndex)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(p, 0.2f);
+                    Gizmos.color = Color.gray;
+                }
+                else if ((i + 1) == selectedLaneIndex)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawSphere(p, 0.2f);
+                    Gizmos.color = Color.gray;
+                }
+                else
+                {
+                    Gizmos.DrawSphere(p, 0.2f);
+                }
+            }
+
+            Gizmos.color = Color.gray;
+            for (int i = 0; i < rightLanes.Count; i++)
+            {
+                Vector3 p = transform.position + transform.right * (i + 1) * leftLanes[i].laneWidth.a / 2;
+                if ((i + 1) == -pointerLaneIndex)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(p, 0.2f);
+                    Gizmos.color = Color.gray;
+                }
+                else if ((i + 1) == -selectedLaneIndex)
                 {
                     Gizmos.color = Color.red;
                     Gizmos.DrawSphere(p, 0.2f);

@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 [ExecuteInEditMode]
-public class Lane : MonoBehaviour, INode
+public class Lane : INode
 {
 	public class Width
 	{
@@ -19,7 +20,7 @@ public class Lane : MonoBehaviour, INode
 
 	public Width laneWidth;
 
-	private void Awake()
+	public Lane()
     {
 		SceneManager.Instance.sceneNodes.Add(this);
 		laneWidth = new Width();
