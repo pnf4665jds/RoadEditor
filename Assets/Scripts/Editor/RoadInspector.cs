@@ -22,6 +22,12 @@ public class RoadInspector : Editor
         serializedObject.Update();
         _targetRoad = target as Road;
 
+        GUILayout.Label("---------------Debug---------------");
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("pointerKnobIndex"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("selectedKnobIndex"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("pointerLaneIndex"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("selectedLaneIndex"), true);
+
         GUILayout.Label("---------------Preview Settings---------------");
         EditorGUILayout.PropertyField(serializedObject.FindProperty("referenceLineWrapper"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("roadRenderer"), true);
@@ -56,11 +62,21 @@ public class RoadInspector : Editor
 
     private void OnSceneGUI()
     {
+        Tools.hidden = true;
+
         _targetRoad = target as Road;
         EditManager.Instance.selectedRoad = _targetRoad;
 
         // 計算現在指到的是哪個控制點
         Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+        CheckKnob(ray);
+
+        // 重新繪製scene view
+        SceneView.lastActiveSceneView.Repaint();
+    }
+
+    private void CheckKnob(Ray ray)
+    {
         _targetRoad.pointerKnobIndex = 0;
         // 這裡的min對應畫出來的控制點圓球半徑
         float min = 0.2f;
@@ -87,8 +103,5 @@ public class RoadInspector : Editor
         {
             _targetRoad.selectedKnobIndex = index;
         }
-
-        // 重新繪製scene view
-        SceneView.lastActiveSceneView.Repaint();
     }
 }

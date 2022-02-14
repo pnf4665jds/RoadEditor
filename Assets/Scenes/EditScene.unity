@@ -152,9 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f1f7369d9df2549a5713a964f31f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roadPrefab: {fileID: 3225447721203038055, guid: c4c257fb62e710044a9eab739f4cea73, type: 3}
+  roadPrefabs:
+  - {fileID: 3225447721203038055, guid: c4c257fb62e710044a9eab739f4cea73, type: 3}
+  - {fileID: 3225447721203038055, guid: cca6d360aa76e1f4aaa8d1261200017c, type: 3}
   selectedRoad: {fileID: 0}
-  editRoadUI: {fileID: 0}
   isPreviewMode: 0
 --- !u!4 &230817043
 Transform:

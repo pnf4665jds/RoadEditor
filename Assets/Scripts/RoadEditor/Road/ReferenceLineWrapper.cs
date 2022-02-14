@@ -41,7 +41,63 @@ public class ReferenceLineWrapper : MonoBehaviour
 		return B;
 	}
 
-    private void Update()
+	/// <summary>
+	/// 根據給定的t值取得referenceline位置
+	/// </summary>
+	/// <param name="t"></param>
+	/// <returns></returns>
+	public Vector3 GetReferenceLineWorldPos(float t)
+	{
+		float tt = t * t;
+		float ttt = t * tt;
+		float u = 1.0f - t;
+		float uu = u * u;
+		float uuu = u * uu;
+
+		Vector3 B = new Vector3();
+		B = uuu * controlPoints[0].transform.position;
+		B += 3.0f * uu * t * controlPoints[1].transform.position;
+		B += 3.0f * u * tt * controlPoints[2].transform.position;
+		B += ttt * controlPoints[3].transform.position;
+
+		return B;
+	}
+
+	public Vector3 GetReferenceLineTangent(float t)
+	{
+		float tt = t * t;
+		float ttt = t * tt;
+		float u = 1.0f - t;
+		float uu = u * u;
+		float uuu = u * uu;
+
+		Vector3 B = new Vector3();
+		B = -3.0f * uu * controlPoints[0].transform.localPosition;
+		B += 3.0f * (-2.0f * u * t + uu) * controlPoints[1].transform.localPosition;
+		B += 3.0f * (-tt + 2 * u * t) * controlPoints[2].transform.localPosition;
+		B += 3.0f * tt * controlPoints[3].transform.localPosition;
+
+		return B.normalized;
+	}
+
+	public Vector3 GetReferenceLineWorldTangent(float t)
+	{
+		float tt = t * t;
+		float ttt = t * tt;
+		float u = 1.0f - t;
+		float uu = u * u;
+		float uuu = u * uu;
+
+		Vector3 B = new Vector3();
+		B = -3.0f * uu * controlPoints[0].transform.position;
+		B += 3.0f * (-2.0f * u * t + uu) * controlPoints[1].transform.position;
+		B += 3.0f * (-tt + 2 * u * t) * controlPoints[2].transform.position;
+		B += 3.0f * tt * controlPoints[3].transform.position;
+
+		return B.normalized;
+	}
+
+	private void Update()
     {
 		for (int p = 0; p < 100; p++)
 		{
@@ -60,5 +116,15 @@ public class ReferenceLineWrapper : MonoBehaviour
 	public Vector3 GetEndControlPointPos()
 	{
 		return controlPoints[controlPoints.Count - 1].transform.position;
+	}
+
+	public Vector3 GetStartControlPointDir()
+	{
+		return controlPoints[1].transform.position - controlPoints[0].transform.position;
+	}
+
+	public Vector3 GetEndControlPointDir()
+	{
+		return controlPoints[controlPoints.Count - 1].transform.position - controlPoints[controlPoints.Count - 2].transform.position;
 	}
 }

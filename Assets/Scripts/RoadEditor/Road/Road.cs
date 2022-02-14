@@ -37,8 +37,13 @@ public class Road : MonoBehaviour, INode
     // 是否繪製控制點
     public bool drawControlPoints = true;
 
-    public int pointerKnobIndex { get; set; } = 0;
-    public int selectedKnobIndex { get; set; } = 0;
+    // 是否繪製車道Node
+    public bool drawLaneNode = true;
+
+    public int pointerKnobIndex = 0;
+    public int selectedKnobIndex = 0;
+    public int pointerLaneIndex = 0;
+    public int selectedLaneIndex = 0;
 
     // 如果不屬於Junction則為null reference
     public JunctionNode parentJunction { get; set; }
@@ -47,6 +52,7 @@ public class Road : MonoBehaviour, INode
 
     private void Awake()
     {
+        UnityEditor.Tools.hidden = true;
         SceneManager.Instance.sceneRoads.Add(this);
         SceneManager.Instance.sceneNodes.Add(this);
         leftLanes = new List<Lane>();
@@ -71,7 +77,9 @@ public class Road : MonoBehaviour, INode
         leftLanes.Add(lane);
         lane.OnNodeInit();
         lane.parentRoad = this;
-        laneObject.transform.localPosition = laneParent.transform.right * 1.0f * leftLanes.Count;
+        Vector3 forward = referenceLineWrapper.GetReferenceLineWorldTangent(0.5f);
+        Vector3 left = Vector3.Cross(Vector3.up, -forward);
+        laneObject.transform.position = referenceLineWrapper.GetReferenceLineWorldPos(0.5f) + left * 1.0f * leftLanes.Count;
         laneObject.name = "LeftLane" + leftLanes.Count;
     }
 
@@ -96,7 +104,9 @@ public class Road : MonoBehaviour, INode
         rightLanes.Add(lane);
         lane.OnNodeInit();
         lane.parentRoad = this;
-        laneObject.transform.localPosition = -laneParent.transform.right * 1.0f * rightLanes.Count;
+        Vector3 forward = referenceLineWrapper.GetReferenceLineWorldTangent(0.5f);
+        Vector3 right = Vector3.Cross(Vector3.up, forward);
+        laneObject.transform.position = referenceLineWrapper.GetReferenceLineWorldPos(0.5f) + right * 1.0f * leftLanes.Count;
         laneObject.name = "RightLane" + rightLanes.Count;
     }
 
@@ -118,18 +128,32 @@ public class Road : MonoBehaviour, INode
     {
         predecessorRoad = road;
         road.successorRoad = this;
+
+        // 計算旋轉量，確保頭尾的朝向正確
+        Vector3 thisStartTangent = referenceLineWrapper.GetReferenceLineTangent(0);
+        Vector3 anotherEndTangent = road.referenceLineWrapper.GetReferenceLineTangent(1);
+        road.transform.rotation = transform.rotation * Quaternion.FromToRotation(anotherEndTangent, thisStartTangent);
+
+        // 計算位移量，確保頭尾相連
         Vector3 thisStartPos = referenceLineWrapper.GetStartControlPointPos();
         Vector3 anotherEndPos = road.referenceLineWrapper.GetEndControlPointPos();
-        road.transform.Translate(thisStartPos - anotherEndPos);
+        road.transform.position += thisStartPos - anotherEndPos;
     }
 
     public void SetSuccessorRoad(Road road)
     {
         successorRoad = road;
         road.predecessorRoad = this;
+
+        // 計算旋轉量，確保頭尾的朝向正確
+        Vector3 thisEndTangent = referenceLineWrapper.GetReferenceLineTangent(1);
+        Vector3 anotherStartTangent = road.referenceLineWrapper.GetReferenceLineTangent(0);
+        road.transform.rotation = transform.rotation * Quaternion.FromToRotation(anotherStartTangent, thisEndTangent);
+
+        // 計算位移量，確保頭尾相連
         Vector3 thisEndPos = referenceLineWrapper.GetEndControlPointPos();
         Vector3 anotherStartPos = road.referenceLineWrapper.GetStartControlPointPos();
-        road.transform.Translate(thisEndPos - anotherStartPos);
+        road.transform.position += thisEndPos - anotherStartPos;
     }
 
     public void OnNodeInit()
@@ -139,7 +163,7 @@ public class Road : MonoBehaviour, INode
 
     public void OnPreviewMode()
     {
-
+        
     }
 
     public void OnEditMode()

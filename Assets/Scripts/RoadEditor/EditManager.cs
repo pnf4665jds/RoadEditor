@@ -6,8 +6,7 @@ using UnityEngine.EventSystems;
 [ExecuteInEditMode]
 public class EditManager : MonoSingleton<EditManager>
 {
-    public GameObject roadPrefab;
+    public List<GameObject> roadPrefabs;
     public Road selectedRoad;
-    public GameObject editRoadUI;
     public bool isPreviewMode = true;
 }
