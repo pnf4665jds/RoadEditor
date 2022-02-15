@@ -48,16 +48,12 @@ public class Road : MonoBehaviour
     // 如果不屬於Junction則為null reference
     public JunctionNode parentJunction { get; set; }
 
-    private MeshRenderer _nodeRenderer { get; set; }
-
     private void Awake()
     {
         UnityEditor.Tools.hidden = true;
         SceneManager.Instance.sceneRoads.Add(this);
         leftLanes = new List<Lane>();
         rightLanes = new List<Lane>();
-
-        _nodeRenderer = GetComponent<MeshRenderer>();
 
         // 初始化時左右側各新增一條車道
         AddLeftLane();
@@ -69,6 +65,9 @@ public class Road : MonoBehaviour
         roadRenderer.UpdateRoad(referenceLineWrapper, leftLanes, rightLanes);
     }
 
+    /// <summary>
+    /// 新增左車道
+    /// </summary>
     public void AddLeftLane()
     {
         GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
@@ -81,6 +80,9 @@ public class Road : MonoBehaviour
         laneObject.name = "LeftLane" + leftLanes.Count;
     }
 
+    /// <summary>
+    /// 移除左車道
+    /// </summary>
     public void RemoveLeftLane()
     {
         if (leftLanes.Count <= 0)
@@ -94,6 +96,9 @@ public class Road : MonoBehaviour
         DestroyImmediate(lane.gameObject);
     }
 
+    /// <summary>
+    /// 新增右車道
+    /// </summary>
     public void AddRightLane()
     {
         GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
@@ -106,6 +111,9 @@ public class Road : MonoBehaviour
         laneObject.name = "RightLane" + rightLanes.Count;
     }
 
+    /// <summary>
+    /// 移除右車道
+    /// </summary>
     public void RemoveRightLane()
     {
         if (rightLanes.Count <= 0)
@@ -119,6 +127,10 @@ public class Road : MonoBehaviour
         DestroyImmediate(lane.gameObject);
     }
 
+    /// <summary>
+    /// 設定前一個相連的道路
+    /// </summary>
+    /// <param name="road"></param>
     public void SetPredecessorRoad(Road road)
     {
         predecessorRoad = road;
@@ -135,6 +147,10 @@ public class Road : MonoBehaviour
         road.transform.position += thisStartPos - anotherEndPos;
     }
 
+    /// <summary>
+    /// 設定後一個相連的道路
+    /// </summary>
+    /// <param name="road"></param>
     public void SetSuccessorRoad(Road road)
     {
         successorRoad = road;

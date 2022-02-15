@@ -19,12 +19,12 @@ public class ReferenceLineWrapper : MonoBehaviour
 		return lineRenderer.positionCount;
     }
 
-    /// <summary>
-    /// 根據給定的t值取得referenceline位置
-    /// </summary>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    public Vector3 GetReferenceLinePos(float t)
+	/// <summary>
+	/// 根據給定的t值取得referenceline上某個點的局部座標
+	/// </summary>
+	/// <param name="t"></param>
+	/// <returns></returns>
+	public Vector3 GetReferenceLinePos(float t)
 	{
 		float tt = t * t;
 		float ttt = t * tt;
@@ -42,7 +42,7 @@ public class ReferenceLineWrapper : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 根據給定的t值取得referenceline位置
+	/// 根據給定的t值取得referenceline上某個點的世界座標
 	/// </summary>
 	/// <param name="t"></param>
 	/// <returns></returns>
@@ -63,6 +63,11 @@ public class ReferenceLineWrapper : MonoBehaviour
 		return B;
 	}
 
+	/// <summary>
+	/// 根據給定的t值取得referenceline上某個點的局部切線方向
+	/// </summary>
+	/// <param name="t"></param>
+	/// <returns></returns>
 	public Vector3 GetReferenceLineTangent(float t)
 	{
 		float tt = t * t;
@@ -80,6 +85,11 @@ public class ReferenceLineWrapper : MonoBehaviour
 		return B.normalized;
 	}
 
+	/// <summary>
+	/// 根據給定的t值取得referenceline上某個點的切線方向(世界座標)
+	/// </summary>
+	/// <param name="t"></param>
+	/// <returns></returns>
 	public Vector3 GetReferenceLineWorldTangent(float t)
 	{
 		float tt = t * t;
@@ -108,23 +118,21 @@ public class ReferenceLineWrapper : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 取得第一個控制點的位置
+	/// </summary>
+	/// <returns></returns>
 	public Vector3 GetStartControlPointPos()
     {
 		return controlPoints[0].transform.position;
     }
 
+	/// <summary>
+	/// 取得最後一個控制點的位置
+	/// </summary>
+	/// <returns></returns>
 	public Vector3 GetEndControlPointPos()
 	{
 		return controlPoints[controlPoints.Count - 1].transform.position;
-	}
-
-	public Vector3 GetStartControlPointDir()
-	{
-		return controlPoints[1].transform.position - controlPoints[0].transform.position;
-	}
-
-	public Vector3 GetEndControlPointDir()
-	{
-		return controlPoints[controlPoints.Count - 1].transform.position - controlPoints[controlPoints.Count - 2].transform.position;
 	}
 }

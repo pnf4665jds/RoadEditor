@@ -157,7 +157,6 @@ MonoBehaviour:
   - {fileID: 3225447721203038055, guid: cca6d360aa76e1f4aaa8d1261200017c, type: 3}
   - {fileID: 3225447721203038055, guid: eef9088cdbc9ecf40801526ce2d898f4, type: 3}
   selectedRoad: {fileID: 0}
-  isPreviewMode: 1
 --- !u!4 &230817043
 Transform:
   m_ObjectHideFlags: 0

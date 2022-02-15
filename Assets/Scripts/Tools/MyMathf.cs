@@ -5,7 +5,7 @@ using UnityEngine;
 public class MyMathf
 {
     /// <summary>
-    /// 計算滑鼠射線到任一點的距離
+    /// 計算射線到任一點的距離
     /// </summary>
     /// <param name="ray"></param>
     /// <param name="p"></param>

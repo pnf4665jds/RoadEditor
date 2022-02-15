@@ -26,7 +26,12 @@ public class RoadRenderer : MonoBehaviour
         _renderer = GetComponent<MeshRenderer>();
     }
 
-    // 更新路面mesh
+    /// <summary>
+    /// 更新路面mesh
+    /// </summary>
+    /// <param name="wrapper"></param>
+    /// <param name="leftLanes"></param>
+    /// <param name="rightLanes"></param>
     public void UpdateRoad(ReferenceLineWrapper wrapper, List<Lane> leftLanes, List<Lane> rightLanes)
     {
         if (!_renderer.enabled)
@@ -42,6 +47,13 @@ public class RoadRenderer : MonoBehaviour
         _renderer.enabled = visible;
     }
 
+    /// <summary>
+    /// 根據Lane生成簡單的車道mesh
+    /// </summary>
+    /// <param name="wrapper"></param>
+    /// <param name="leftLanes"></param>
+    /// <param name="rightLanes"></param>
+    /// <returns></returns>
     private Mesh CreateRoadMesh(ReferenceLineWrapper wrapper, List<Lane> leftLanes, List<Lane> rightLanes)
     {
         int totalLaneCount = leftLanes.Count + rightLanes.Count;
