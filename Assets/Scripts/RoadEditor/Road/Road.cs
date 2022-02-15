@@ -4,7 +4,7 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [System.Serializable]
-public class Road : MonoBehaviour, INode
+public class Road : MonoBehaviour
 {
     // 參考: https://blog.csdn.net/qq_36622009/article/details/107006508#OpenDrive_52
     // 參考: https://hackmd.io/@yashashin/By78mxp0F#Roads
@@ -54,7 +54,6 @@ public class Road : MonoBehaviour, INode
     {
         UnityEditor.Tools.hidden = true;
         SceneManager.Instance.sceneRoads.Add(this);
-        SceneManager.Instance.sceneNodes.Add(this);
         leftLanes = new List<Lane>();
         rightLanes = new List<Lane>();
 
@@ -75,7 +74,6 @@ public class Road : MonoBehaviour, INode
         GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
         Lane lane = laneObject.GetComponent<Lane>();
         leftLanes.Add(lane);
-        lane.OnNodeInit();
         lane.parentRoad = this;
         Vector3 forward = referenceLineWrapper.GetReferenceLineWorldTangent(0.5f);
         Vector3 left = Vector3.Cross(Vector3.up, -forward);
@@ -93,7 +91,6 @@ public class Road : MonoBehaviour, INode
         int removeIndex = leftLanes.Count - 1;
         Lane lane = leftLanes[removeIndex];
         leftLanes.RemoveAt(removeIndex);
-        SceneManager.Instance.sceneNodes.Remove(lane);
         DestroyImmediate(lane.gameObject);
     }
 
@@ -102,7 +99,6 @@ public class Road : MonoBehaviour, INode
         GameObject laneObject = Instantiate(lanePrefab, laneParent.transform);
         Lane lane = laneObject.GetComponent<Lane>();
         rightLanes.Add(lane);
-        lane.OnNodeInit();
         lane.parentRoad = this;
         Vector3 forward = referenceLineWrapper.GetReferenceLineWorldTangent(0.5f);
         Vector3 right = Vector3.Cross(Vector3.up, forward);
@@ -120,7 +116,6 @@ public class Road : MonoBehaviour, INode
         int removeIndex = rightLanes.Count - 1;
         Lane lane = rightLanes[removeIndex];
         rightLanes.RemoveAt(removeIndex);
-        SceneManager.Instance.sceneNodes.Remove(lane);
         DestroyImmediate(lane.gameObject);
     }
 
@@ -154,21 +149,6 @@ public class Road : MonoBehaviour, INode
         Vector3 thisEndPos = referenceLineWrapper.GetEndControlPointPos();
         Vector3 anotherStartPos = road.referenceLineWrapper.GetStartControlPointPos();
         road.transform.position += thisEndPos - anotherStartPos;
-    }
-
-    public void OnNodeInit()
-    {
-
-    }
-
-    public void OnPreviewMode()
-    {
-        
-    }
-
-    public void OnEditMode()
-    {
-
     }
 
     void OnDrawGizmos()

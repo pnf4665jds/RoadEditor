@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class Lane : MonoBehaviour, INode
+public class Lane : MonoBehaviour
 {
 	public class Width
 	{
@@ -21,25 +21,6 @@ public class Lane : MonoBehaviour, INode
 
 	private void Awake()
     {
-		SceneManager.Instance.sceneNodes.Add(this);
 		laneWidth = new Width();
-	}
-
-	public void OnNodeInit()
-	{
-		if (EditManager.Instance.isPreviewMode)
-			OnPreviewMode();
-		else
-			OnEditMode();
-	}
-
-	public void OnPreviewMode()
-	{
-
-	}
-
-	public void OnEditMode()
-	{
-
 	}
 }
